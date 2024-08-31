@@ -28,6 +28,7 @@ public class SchemeService {
                 .collect(Collectors.toList());
     }
 
+
     private SchemeDTO convertToSchemeDTO(SchemeEntity scheme) {
 
         Map<String, String> criteriaMap = new HashMap<>();
@@ -35,7 +36,7 @@ public class SchemeService {
         if (scheme.getCriteriaAttributesValues() != null) {
             criteriaMap = scheme.getCriteriaAttributesValues().stream()
                     .collect(Collectors.toMap(
-                            value -> value.getCriteriaAttributesEntity().getCriteriaName(), // or any unique identifier
+                            value -> value.getCriteriaAttributesEntity().getCriteriaName(),
                             CriteriaAttributesValuesEntity::getCriteriaValue
                     ));
         }

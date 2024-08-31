@@ -3,13 +3,10 @@ package sg.gov.financial.assistance.scheme.assignment.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sg.gov.financial.assistance.scheme.assignment.constant.Status;
 import sg.gov.financial.assistance.scheme.assignment.dto.ApplicantDTO;
 import sg.gov.financial.assistance.scheme.assignment.dto.ApplicationResponse;
-import sg.gov.financial.assistance.scheme.assignment.entity.ApplicantEntity;
 import sg.gov.financial.assistance.scheme.assignment.service.ApplicantService;
 
 import java.util.List;
@@ -26,10 +23,18 @@ public class ApplicantController {
     }
 
     @GetMapping
-    public ResponseEntity<ApplicationResponse<List<ApplicantDTO>>> availableSchemes() {
+    public ResponseEntity<ApplicationResponse<List<ApplicantDTO>>> getAllApplicants() {
         var result = applicantService.getAllHouseholdWithMembers();
         var response = new ApplicationResponse<>(Status.SUCCESS, result);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping
+    public ResponseEntity<ApplicationResponse<ApplicantDTO>> createApplicant(@RequestBody ApplicantDTO applicant) {
+        var result = applicantService.createNewApplicant(applicant);
+        var response = new ApplicationResponse<>(Status.SUCCESS, result);
+        return ResponseEntity.ok(response);
+    }
+
 
 }

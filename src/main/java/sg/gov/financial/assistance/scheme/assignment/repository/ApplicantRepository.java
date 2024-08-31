@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ApplicantRepository extends JpaRepository<ApplicantEntity, Long> {
+
     @Query("SELECT head FROM ApplicantEntity head LEFT JOIN FETCH head.householdMembers WHERE head.household IS NULL")
     List<ApplicantEntity> findAllHouseholdsWithMembers();
 }

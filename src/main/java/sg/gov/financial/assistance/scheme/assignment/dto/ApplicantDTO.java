@@ -36,6 +36,9 @@ public class ApplicantDTO {
     @JsonProperty(value = "householdMembers")
     private List<ApplicantDTO> householdMembers;
 
+    public ApplicantDTO() {
+    }
+
     public ApplicantDTO(Long id, String name, Sex sex, LocalDate dateOfBirth, String uin, EmploymentStatus employmentStatus, Relationship relationship) {
         this.id = id;
         this.name = name;

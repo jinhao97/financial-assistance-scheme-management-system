@@ -50,6 +50,18 @@ public class ApplicantEntity extends AbstractAuditEntity {
     @JsonManagedReference
     private List<ApplicantEntity> householdMembers;
 
+    public ApplicantEntity() {
+    }
+
+    public ApplicantEntity(String name, Relationship relationship, Sex sex, LocalDate dateOfBirth, String uin, EmploymentStatus employmentStatus) {
+        this.name = name;
+        this.relationship = relationship;
+        this.sex = sex;
+        this.dateOfBirth = dateOfBirth;
+        this.uin = uin;
+        this.employmentStatus = employmentStatus;
+    }
+
     public ApplicantEntity getHousehold() {
         return household;
     }

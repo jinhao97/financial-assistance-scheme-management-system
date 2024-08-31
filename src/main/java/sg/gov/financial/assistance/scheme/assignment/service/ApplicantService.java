@@ -1,5 +1,6 @@
 package sg.gov.financial.assistance.scheme.assignment.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sg.gov.financial.assistance.scheme.assignment.dto.ApplicantDTO;
@@ -25,6 +26,42 @@ public class ApplicantService {
                 .map(this::convertToApplicantDTO)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public ApplicantDTO createNewApplicant(ApplicantDTO applicantDTO) {
+        // Create the head of household entity
+        ApplicantEntity newApplicant = new ApplicantEntity(
+                applicantDTO.getName(),
+                applicantDTO.getRelationship(),
+                applicantDTO.getSex(),
+                applicantDTO.getDateOfBirth(),
+                applicantDTO.getUin(),
+                applicantDTO.getEmploymentStatus()
+        );
+
+        if (applicantDTO.getHouseholdMembers() != null) {
+            List<ApplicantEntity> householdMembers = applicantDTO.getHouseholdMembers().stream()
+                    .map(dto -> new ApplicantEntity(
+                            dto.getName(),
+                            dto.getRelationship(),
+                            dto.getSex(),
+                            dto.getDateOfBirth(),
+                            dto.getUin(),
+                            dto.getEmploymentStatus()
+                    ))
+                    .collect(Collectors.toList());
+
+            householdMembers.forEach(member -> member.setHousehold(newApplicant));
+
+            newApplicant.setHouseholdMembers(householdMembers);
+        }
+
+        // Save the head of household, which will also save household members due to CascadeType.ALL
+        ApplicantEntity newApplicantEntity = applicantRepository.save(newApplicant);
+
+        return convertToApplicantDTO(newApplicantEntity);
+    }
+
 
     private ApplicantDTO convertToApplicantDTO(ApplicantEntity applicantEntity) {
         if (applicantEntity == null) return null;
