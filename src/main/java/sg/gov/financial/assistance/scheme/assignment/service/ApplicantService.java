@@ -63,7 +63,7 @@ public class ApplicantService {
     }
 
 
-    private ApplicantDTO convertToApplicantDTO(ApplicantEntity applicantEntity) {
+    public ApplicantDTO convertToApplicantDTO(ApplicantEntity applicantEntity) {
         if (applicantEntity == null) return null;
 
         List<ApplicantDTO> householdMembers = applicantEntity.getHouseholdMembers() != null

@@ -31,12 +31,15 @@ public class SchemeDTO {
     @JsonProperty("criteria")
     private Map<String, String> criteria = new HashMap<>();
 
+    @JsonProperty("benefits")
+    private Map<String, String> benefits = new HashMap<>();
+
     public SchemeDTO(Long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public SchemeDTO(Long id, String name, String description, String displayName, LocalDate startDate, LocalDate endDate, Map<String, String> criteria) {
+    public SchemeDTO(Long id, String name, String description, String displayName, LocalDate startDate, LocalDate endDate, Map<String, String> criteria, Map<String, String> benefits) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -44,6 +47,7 @@ public class SchemeDTO {
         this.startDate = startDate;
         this.endDate = endDate;
         this.criteria = criteria;
+        this.benefits = benefits;
     }
 
     public Long getId() {
@@ -102,4 +106,11 @@ public class SchemeDTO {
         this.criteria = criteria;
     }
 
+    public Map<String, String> getBenefits() {
+        return benefits;
+    }
+
+    public void setBenefits(Map<String, String> benefits) {
+        this.benefits = benefits;
+    }
 }

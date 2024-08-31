@@ -3,6 +3,7 @@ package sg.gov.financial.assistance.scheme.assignment.service;
 
 import org.springframework.stereotype.Service;
 import sg.gov.financial.assistance.scheme.assignment.dto.SchemeDTO;
+import sg.gov.financial.assistance.scheme.assignment.entity.BenefitAttributesValuesEntity;
 import sg.gov.financial.assistance.scheme.assignment.entity.CriteriaAttributesValuesEntity;
 import sg.gov.financial.assistance.scheme.assignment.entity.SchemeEntity;
 import sg.gov.financial.assistance.scheme.assignment.repository.SchemeRepository;
@@ -29,9 +30,10 @@ public class SchemeService {
     }
 
 
-    private SchemeDTO convertToSchemeDTO(SchemeEntity scheme) {
+    public SchemeDTO convertToSchemeDTO(SchemeEntity scheme) {
 
         Map<String, String> criteriaMap = new HashMap<>();
+        Map<String, String> benefitMap = new HashMap<>();
 
         if (scheme.getCriteriaAttributesValues() != null) {
             criteriaMap = scheme.getCriteriaAttributesValues().stream()
@@ -40,10 +42,20 @@ public class SchemeService {
                             CriteriaAttributesValuesEntity::getCriteriaValue
                     ));
         }
+
+        if (scheme.getBenefitAttributesValues() != null) {
+            benefitMap = scheme.getBenefitAttributesValues().stream()
+                    .collect(Collectors.toMap(
+                            value -> value.getBenefitAttributesEntity().getBenefitName(),
+                            BenefitAttributesValuesEntity::getBenefitValue
+                    ));
+        }
+
         return new SchemeDTO(
                 scheme.getId(), scheme.getSchemeName(),
                 scheme.getDescription(), scheme.getDisplayName(),
                 scheme.getStartDate(), scheme.getEndDate(),
-                criteriaMap);
+                criteriaMap,
+                benefitMap);
     }
 }

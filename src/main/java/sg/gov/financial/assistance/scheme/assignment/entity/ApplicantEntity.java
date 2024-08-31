@@ -50,6 +50,11 @@ public class ApplicantEntity extends AbstractAuditEntity {
     @JsonManagedReference
     private List<ApplicantEntity> householdMembers;
 
+
+    @OneToMany(mappedBy = "applicantEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private List<ApplicationEntity> applicationList;
+
     public ApplicantEntity() {
     }
 

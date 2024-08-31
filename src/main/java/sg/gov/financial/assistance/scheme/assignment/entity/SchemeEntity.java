@@ -3,6 +3,7 @@ package sg.gov.financial.assistance.scheme.assignment.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -32,6 +33,12 @@ public class SchemeEntity extends AbstractAuditEntity {
 
     @OneToMany(mappedBy = "schemeEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<CriteriaAttributesValuesEntity> criteriaAttributesValues;
+
+    @OneToMany(mappedBy = "schemeEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<BenefitAttributesValuesEntity> benefitAttributesValues;
+
+    @OneToMany(mappedBy = "schemeEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<ApplicationEntity> applicationList;
 
 
     public Long getId() {
@@ -88,5 +95,13 @@ public class SchemeEntity extends AbstractAuditEntity {
 
     public void setCriteriaAttributesValues(Set<CriteriaAttributesValuesEntity> criteriaAttributesValues) {
         this.criteriaAttributesValues = criteriaAttributesValues;
+    }
+
+    public Set<BenefitAttributesValuesEntity> getBenefitAttributesValues() {
+        return benefitAttributesValues;
+    }
+
+    public void setBenefitAttributesValues(Set<BenefitAttributesValuesEntity> benefitAttributesValues) {
+        this.benefitAttributesValues = benefitAttributesValues;
     }
 }
