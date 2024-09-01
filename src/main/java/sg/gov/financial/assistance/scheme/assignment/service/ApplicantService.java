@@ -2,12 +2,16 @@ package sg.gov.financial.assistance.scheme.assignment.service;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import sg.gov.financial.assistance.scheme.assignment.dto.ApplicantDTO;
 import sg.gov.financial.assistance.scheme.assignment.entity.ApplicantEntity;
+import sg.gov.financial.assistance.scheme.assignment.entity.HouseholdData;
+import sg.gov.financial.assistance.scheme.assignment.exception.ApplicationException;
 import sg.gov.financial.assistance.scheme.assignment.repository.ApplicantRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +31,16 @@ public class ApplicantService {
                 .collect(Collectors.toList());
     }
 
+    public ApplicantEntity findApplicant(String uin) {
+        return Optional.ofNullable(applicantRepository.findApplicantEntityByUin(uin))
+                .orElseThrow(() -> new ApplicationException(HttpStatus.BAD_REQUEST, String.format("Applicant with UIN %s not found", uin)));
+    }
+
+    public List<HouseholdData> findHouseholdMembers(String uin) {
+        return applicantRepository.findHouseholdWithMembersByUin(uin);
+    }
+
+
     @Transactional
     public ApplicantDTO createNewApplicant(ApplicantDTO applicantDTO) {
         // Create the head of household entity
@@ -36,7 +50,8 @@ public class ApplicantService {
                 applicantDTO.getSex(),
                 applicantDTO.getDateOfBirth(),
                 applicantDTO.getUin(),
-                applicantDTO.getEmploymentStatus()
+                applicantDTO.getEmploymentStatus(),
+                applicantDTO.getMaritialStatus()
         );
 
         if (applicantDTO.getHouseholdMembers() != null) {
@@ -47,7 +62,8 @@ public class ApplicantService {
                             dto.getSex(),
                             dto.getDateOfBirth(),
                             dto.getUin(),
-                            dto.getEmploymentStatus()
+                            dto.getEmploymentStatus(),
+                            dto.getMaritialStatus()
                     ))
                     .collect(Collectors.toList());
 
@@ -74,6 +90,7 @@ public class ApplicantService {
                 applicant.getDateOfBirth(),
                 applicant.getUin(),
                 applicant.getEmploymentStatus(),
+                applicant.getMaritialStatus(),
                 applicant.getRelationship()
         )).collect(Collectors.toList())
                 : null;
@@ -87,6 +104,7 @@ public class ApplicantService {
                     applicantEntity.getUin(),
                     applicantEntity.getEmploymentStatus(),
                     applicantEntity.getRelationship(),
+                    applicantEntity.getMaritialStatus(),
                     householdMembers
             );
         }
@@ -98,6 +116,7 @@ public class ApplicantService {
                 applicantEntity.getDateOfBirth(),
                 applicantEntity.getUin(),
                 applicantEntity.getEmploymentStatus(),
+                applicantEntity.getMaritialStatus(),
                 applicantEntity.getRelationship()
         );
     }

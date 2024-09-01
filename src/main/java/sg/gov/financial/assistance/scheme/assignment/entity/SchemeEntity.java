@@ -104,4 +104,12 @@ public class SchemeEntity extends AbstractAuditEntity {
     public void setBenefitAttributesValues(Set<BenefitAttributesValuesEntity> benefitAttributesValues) {
         this.benefitAttributesValues = benefitAttributesValues;
     }
+
+    public List<ApplicationEntity> getApplicationList() {
+        return applicationList;
+    }
+
+    public void setApplicationList(List<ApplicationEntity> applicationList) {
+        this.applicationList = applicationList;
+    }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import sg.gov.financial.assistance.scheme.assignment.constant.EmploymentStatus;
+import sg.gov.financial.assistance.scheme.assignment.constant.MaritialStatus;
 import sg.gov.financial.assistance.scheme.assignment.constant.Relationship;
 import sg.gov.financial.assistance.scheme.assignment.constant.Sex;
 
@@ -32,6 +33,10 @@ public class ApplicantEntity extends AbstractAuditEntity {
     @Column(name = "uin")
     private String uin;
 
+    @Column(name = "maritial_status")
+    @Enumerated(EnumType.STRING)
+    private MaritialStatus maritialStatus = MaritialStatus.SINGLE;
+
     @Column(name = "employment_status")
     @Enumerated(EnumType.STRING)
     private EmploymentStatus employmentStatus = EmploymentStatus.UNEMPLOYED;
@@ -58,13 +63,14 @@ public class ApplicantEntity extends AbstractAuditEntity {
     public ApplicantEntity() {
     }
 
-    public ApplicantEntity(String name, Relationship relationship, Sex sex, LocalDate dateOfBirth, String uin, EmploymentStatus employmentStatus) {
+    public ApplicantEntity(String name, Relationship relationship, Sex sex, LocalDate dateOfBirth, String uin, EmploymentStatus employmentStatus,MaritialStatus maritialStatus) {
         this.name = name;
         this.relationship = relationship;
         this.sex = sex;
         this.dateOfBirth = dateOfBirth;
         this.uin = uin;
         this.employmentStatus = employmentStatus;
+        this.maritialStatus = maritialStatus;
     }
 
     public ApplicantEntity getHousehold() {
@@ -137,5 +143,13 @@ public class ApplicantEntity extends AbstractAuditEntity {
 
     public void setHouseholdMembers(List<ApplicantEntity> householdMembers) {
         this.householdMembers = householdMembers;
+    }
+
+    public MaritialStatus getMaritialStatus() {
+        return maritialStatus;
+    }
+
+    public void setMaritialStatus(MaritialStatus maritialStatus) {
+        this.maritialStatus = maritialStatus;
     }
 }

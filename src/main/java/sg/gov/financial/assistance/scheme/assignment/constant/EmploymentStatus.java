@@ -1,8 +1,8 @@
 package sg.gov.financial.assistance.scheme.assignment.constant;
 
 public enum EmploymentStatus {
-    EMPLOYED("Employed"),
-    UNEMPLOYED("Unemployed");
+    EMPLOYED("employed"),
+    UNEMPLOYED("unemployed");
 
     private final String value;
 

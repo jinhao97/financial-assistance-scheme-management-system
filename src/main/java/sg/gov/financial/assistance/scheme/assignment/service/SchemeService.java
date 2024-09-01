@@ -29,6 +29,15 @@ public class SchemeService {
                 .collect(Collectors.toList());
     }
 
+    public SchemeEntity getSchemeBySchemeName(String schemeName) {
+        return schemeRepository.findBySchemeName(schemeName);
+    }
+
+    public List<SchemeDTO> getApplicantEligibleSchemes(String uin) {
+
+
+        return null;
+    }
 
     public SchemeDTO convertToSchemeDTO(SchemeEntity scheme) {
 
@@ -57,5 +66,9 @@ public class SchemeService {
                 scheme.getStartDate(), scheme.getEndDate(),
                 criteriaMap,
                 benefitMap);
+    }
+
+    public SchemeDTO schemeDetails(SchemeEntity scheme) {
+        return new SchemeDTO(scheme.getId(), scheme.getSchemeName(), scheme.getDescription(), scheme.getDisplayName(), scheme.getStartDate(), scheme.getEndDate(), null, null);
     }
 }

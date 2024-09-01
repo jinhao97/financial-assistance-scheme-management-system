@@ -1,6 +1,7 @@
 package sg.gov.financial.assistance.scheme.assignment.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
@@ -8,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SchemeDTO {
 
     @JsonProperty(value = "id")
@@ -37,6 +39,15 @@ public class SchemeDTO {
     public SchemeDTO(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public SchemeDTO(Long id, String name, String description, String displayName, LocalDate startDate, LocalDate endDate) {
+        this.id = id;
+        this.endDate = endDate;
+        this.name = name;
+        this.description = description;
+        this.displayName = displayName;
+        this.startDate = startDate;
     }
 
     public SchemeDTO(Long id, String name, String description, String displayName, LocalDate startDate, LocalDate endDate, Map<String, String> criteria, Map<String, String> benefits) {

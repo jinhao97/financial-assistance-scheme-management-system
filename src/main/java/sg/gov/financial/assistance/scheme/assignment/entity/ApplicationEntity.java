@@ -1,6 +1,9 @@
 package sg.gov.financial.assistance.scheme.assignment.entity;
 
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import sg.gov.financial.assistance.scheme.assignment.constant.ApplicationStatus;
 
 
@@ -8,6 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "t_applications", schema = "public")
+@Convert(attributeName = "jsonb", converter = JsonBinaryType.class)
 public class ApplicationEntity extends AbstractAuditEntity {
 
     @Id
@@ -24,6 +28,10 @@ public class ApplicationEntity extends AbstractAuditEntity {
     @JoinColumn(name = "scheme_id", nullable = false)
     private SchemeEntity schemeEntity;
 
+    @JdbcTypeCode(value = SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb", name = "benefit_details")
+    private String benefitDetails;
+
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status = ApplicationStatus.PENDING;
@@ -32,6 +40,14 @@ public class ApplicationEntity extends AbstractAuditEntity {
     private LocalDateTime submissionDateTime;
 
     public ApplicationEntity() {
+    }
+
+    public ApplicationEntity(ApplicantEntity applicantEntity, SchemeEntity schemeEntity, String benefitDetails, LocalDateTime submissionDateTime, ApplicationStatus status) {
+        this.applicantEntity = applicantEntity;
+        this.schemeEntity = schemeEntity;
+        this.benefitDetails = benefitDetails;
+        this.submissionDateTime = submissionDateTime;
+        this.status = status;
     }
 
     public ApplicantEntity getApplicantEntity() {
@@ -72,5 +88,13 @@ public class ApplicationEntity extends AbstractAuditEntity {
 
     public void setSubmissionDateTime(LocalDateTime submissionDateTime) {
         this.submissionDateTime = submissionDateTime;
+    }
+
+    public String getBenefitDetails() {
+        return benefitDetails;
+    }
+
+    public void setBenefitDetails(String benefitDetails) {
+        this.benefitDetails = benefitDetails;
     }
 }

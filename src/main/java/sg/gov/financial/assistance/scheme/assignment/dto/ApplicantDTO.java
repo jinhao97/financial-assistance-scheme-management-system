@@ -3,6 +3,7 @@ package sg.gov.financial.assistance.scheme.assignment.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import sg.gov.financial.assistance.scheme.assignment.constant.EmploymentStatus;
+import sg.gov.financial.assistance.scheme.assignment.constant.MaritialStatus;
 import sg.gov.financial.assistance.scheme.assignment.constant.Relationship;
 import sg.gov.financial.assistance.scheme.assignment.constant.Sex;
 
@@ -30,6 +31,9 @@ public class ApplicantDTO {
     @JsonProperty(value = "employmentStatus")
     private EmploymentStatus employmentStatus;
 
+    @JsonProperty(value = "maritialStatus")
+    private MaritialStatus maritialStatus;
+
     @JsonProperty(value = "relationship")
     private Relationship relationship;
 
@@ -39,23 +43,25 @@ public class ApplicantDTO {
     public ApplicantDTO() {
     }
 
-    public ApplicantDTO(Long id, String name, Sex sex, LocalDate dateOfBirth, String uin, EmploymentStatus employmentStatus, Relationship relationship) {
+    public ApplicantDTO(Long id, String name, Sex sex, LocalDate dateOfBirth, String uin, EmploymentStatus employmentStatus, MaritialStatus maritialStatus,Relationship relationship) {
         this.id = id;
         this.name = name;
         this.sex = sex;
         this.dateOfBirth = dateOfBirth;
         this.uin = uin;
         this.employmentStatus = employmentStatus;
+        this.maritialStatus = maritialStatus;
         this.relationship = relationship;
     }
 
-    public ApplicantDTO(Long id, String name, Sex sex, LocalDate dateOfBirth, String uin, EmploymentStatus employmentStatus, Relationship relationship, List<ApplicantDTO> householdMembers) {
+    public ApplicantDTO(Long id, String name, Sex sex, LocalDate dateOfBirth, String uin, EmploymentStatus employmentStatus, Relationship relationship, MaritialStatus maritialStatus,List<ApplicantDTO> householdMembers) {
         this.id = id;
         this.name = name;
         this.sex = sex;
         this.dateOfBirth = dateOfBirth;
         this.uin = uin;
         this.employmentStatus = employmentStatus;
+        this.maritialStatus = maritialStatus;
         this.relationship = relationship;
         this.householdMembers = householdMembers;
     }
@@ -122,5 +128,13 @@ public class ApplicantDTO {
 
     public void setHouseholdMembers(List<ApplicantDTO> householdMembers) {
         this.householdMembers = householdMembers;
+    }
+
+    public MaritialStatus getMaritialStatus() {
+        return maritialStatus;
+    }
+
+    public void setMaritialStatus(MaritialStatus maritialStatus) {
+        this.maritialStatus = maritialStatus;
     }
 }

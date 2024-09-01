@@ -1,6 +1,11 @@
 package sg.gov.financial.assistance.scheme.assignment.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +29,15 @@ public class SchemeController {
         this.schemeService = schemeService;
     }
 
+    @Operation(summary = "Get all available financial assistance schemes",
+            description = "Retrieves a list of all available financial assistance schemes")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved list of schemes",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ApplicationResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(mediaType = "application/json"))
+    })
     @GetMapping
     public ResponseEntity<ApplicationResponse<List<SchemeDTO>>> availableSchemes() {
         var result = schemeService.getAllAvailableSchemes();
