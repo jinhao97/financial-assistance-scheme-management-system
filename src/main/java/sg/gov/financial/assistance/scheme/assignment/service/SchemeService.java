@@ -27,6 +27,12 @@ public class SchemeService {
     private final SchemeRepository schemeRepository;
     private final SchemeMapper schemeMapper;
 
+    private static final String SKILLS_FUTURE_CREDITS = "SkillsFuture Credits";
+    private static final String SCHOOL_MEAL_VOUCHER = "School Meal Voucher";
+    private static final String CRITERIA_HAS_CHILDREN = "has_children";
+    private static final String CRITERIA_SCHOOL_LEVEL = "school_level";
+    private static final String SCHOOL_LEVEL_PRIMARY = "primary";
+
     @Autowired
     public SchemeService(SchemeRepository schemeRepository, SchemeMapper schemeMapper) {
         this.schemeRepository = schemeRepository;
@@ -72,21 +78,21 @@ public class SchemeService {
     }
 
     private void addSkillsFutureCredits(Map<String, String> benefitMap, Map<String, String> eligibleBenefitsMap) {
-        if (benefitMap.containsKey("SkillsFuture Credits")) {
-            eligibleBenefitsMap.put("SkillsFuture Credits", benefitMap.get("SkillsFuture Credits"));
+        if (benefitMap.containsKey(SKILLS_FUTURE_CREDITS)) {
+            eligibleBenefitsMap.put(SKILLS_FUTURE_CREDITS, benefitMap.get(SKILLS_FUTURE_CREDITS));
         }
     }
 
     private void checkSchoolMealVoucherEligibility(List<HouseholdData> householdMembers, Map<String, String> criteria, Map<String, String> benefitMap, Map<String, String> eligibleBenefitsMap) {
-        boolean hasChildren = Boolean.parseBoolean(criteria.get("has_children"));
-        boolean isPrimarySchool = "primary".equals(criteria.get("school_level"));
+        boolean hasChildren = Boolean.parseBoolean(criteria.get(CRITERIA_HAS_CHILDREN));
+        boolean isPrimarySchool = SCHOOL_LEVEL_PRIMARY.equals(criteria.get(CRITERIA_SCHOOL_LEVEL));
 
         if (!householdMembers.isEmpty() && hasChildren && isPrimarySchool) {
             boolean hasPrimaryChildMember = householdMembers.stream()
                     .anyMatch(this::isPrimarySchoolChild);
 
             if (hasPrimaryChildMember) {
-                eligibleBenefitsMap.put("School Meal Voucher", benefitMap.get("School Meal Voucher"));
+                eligibleBenefitsMap.put(SCHOOL_MEAL_VOUCHER, benefitMap.get(SCHOOL_MEAL_VOUCHER));
             }
         }
     }

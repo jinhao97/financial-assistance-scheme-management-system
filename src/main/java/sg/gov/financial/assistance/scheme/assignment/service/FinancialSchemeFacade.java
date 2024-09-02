@@ -37,13 +37,16 @@ public class FinancialSchemeFacade {
             var schemeEligibility = schemeService.determineEligibleBenefits(applicant, scheme, householdMembers);
             if (schemeEligibility.isPresent()) {
                 return applicationService.saveApplication(applicant, scheme, schemeEligibility.get());
+            } else {
+                throw new ApplicationException(HttpStatus.BAD_REQUEST, String.format("Applicant with UIN %s is not eligible for scheme %s", request.getUin(), request.getSchemeName()));
             }
 
+        } catch (ApplicationException e) {
+            throw e;
         } catch (Exception e) {
             throw new ApplicationException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
 
-        throw new ApplicationException(HttpStatus.BAD_REQUEST, String.format("Applicant with UIN %s is not eligible for scheme %s", request.getUin(), request.getSchemeName()));
     }
 
 
