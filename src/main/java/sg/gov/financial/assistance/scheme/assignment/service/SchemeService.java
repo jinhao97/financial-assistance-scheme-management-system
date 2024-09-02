@@ -31,6 +31,7 @@ public class SchemeService {
     private static final String SCHOOL_MEAL_VOUCHER = "School Meal Voucher";
     private static final String CRITERIA_HAS_CHILDREN = "has_children";
     private static final String CRITERIA_SCHOOL_LEVEL = "school_level";
+    private static final String CRITERIA_EMPLOYMENT_STATUS = "employment_status";
     private static final String SCHOOL_LEVEL_PRIMARY = "primary";
 
     @Autowired
@@ -63,7 +64,7 @@ public class SchemeService {
 
 
     private boolean isCriteriaMet(Map<String, String> criteria, EmploymentStatus applicantEmploymentStatus) {
-        var employmentStatus = criteria.get("employment_status");
+        var employmentStatus = criteria.get(CRITERIA_EMPLOYMENT_STATUS);
         return employmentStatus.equals(applicantEmploymentStatus.getValue());
     }
 
