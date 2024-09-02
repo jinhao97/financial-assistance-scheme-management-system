@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import sg.gov.financial.assistance.scheme.assignment.constant.EmploymentStatus;
-import sg.gov.financial.assistance.scheme.assignment.dto.ApplicantDTO;
 import sg.gov.financial.assistance.scheme.assignment.dto.SchemeDTO;
 import sg.gov.financial.assistance.scheme.assignment.entity.ApplicantEntity;
 import sg.gov.financial.assistance.scheme.assignment.entity.HouseholdData;
@@ -57,7 +56,7 @@ public class SchemeService {
     }
 
 
-    public boolean isCriteriaMet(Map<String, String> criteria, EmploymentStatus applicantEmploymentStatus) {
+    private boolean isCriteriaMet(Map<String, String> criteria, EmploymentStatus applicantEmploymentStatus) {
         var employmentStatus = criteria.get("employment_status");
         return employmentStatus.equals(applicantEmploymentStatus.getValue());
     }
