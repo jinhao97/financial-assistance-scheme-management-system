@@ -1,31 +1,24 @@
-package sg.gov.financial.assistance.scheme.assignment.service;
+package sg.gov.financial.assistance.scheme.assignment.service.scheme;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import sg.gov.financial.assistance.scheme.assignment.constant.EmploymentStatus;
 import sg.gov.financial.assistance.scheme.assignment.dto.SchemeDTO;
 import sg.gov.financial.assistance.scheme.assignment.entity.ApplicantEntity;
 import sg.gov.financial.assistance.scheme.assignment.entity.HouseholdData;
 import sg.gov.financial.assistance.scheme.assignment.entity.SchemeEntity;
-import sg.gov.financial.assistance.scheme.assignment.exception.ApplicationException;
 import sg.gov.financial.assistance.scheme.assignment.mapper.SchemeMapper;
-import sg.gov.financial.assistance.scheme.assignment.repository.SchemeRepository;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
-@Service
-public class SchemeService {
+import static sg.gov.financial.assistance.scheme.assignment.service.scheme.SchemeType.REA_SCH;
 
-    private final SchemeRepository schemeRepository;
-    private final SchemeMapper schemeMapper;
+
+@Service(value = REA_SCH)
+public class RetrenchmentAssistanceSchemeService implements FinancialScheme {
 
     private static final String SKILLS_FUTURE_CREDITS = "SkillsFuture Credits";
     private static final String SCHOOL_MEAL_VOUCHER = "School Meal Voucher";
@@ -34,34 +27,32 @@ public class SchemeService {
     private static final String CRITERIA_EMPLOYMENT_STATUS = "employment_status";
     private static final String SCHOOL_LEVEL_PRIMARY = "primary";
 
-    @Autowired
-    public SchemeService(SchemeRepository schemeRepository, SchemeMapper schemeMapper) {
-        this.schemeRepository = schemeRepository;
+    private final SchemeMapper schemeMapper;
+
+    public RetrenchmentAssistanceSchemeService(SchemeMapper schemeMapper) {
         this.schemeMapper = schemeMapper;
     }
 
-    public List<SchemeDTO> getAllAvailableSchemes() {
-        List<SchemeEntity> schemes = schemeRepository.findAllSchemesWithinCurrentDate();
-        return schemes.stream()
-                .map(schemeEntity -> schemeMapper.toDTO(schemeEntity, true))
-                .collect(Collectors.toList());
-    }
+    @Override
+    public SchemeDTO checkEligibility(ApplicantEntity applicant, SchemeEntity scheme, List<HouseholdData> householdMembers) {
 
-    public SchemeEntity getSchemeBySchemeName(String schemeName) {
-        return Optional.ofNullable(schemeRepository.findBySchemeName(schemeName))
-                .orElseThrow(() -> new ApplicationException(HttpStatus.BAD_REQUEST, String.format("Invalid scheme %s", schemeName)));
-    }
-
-    public Optional<Map<String, String>> determineEligibleBenefits(ApplicantEntity applicant, SchemeEntity scheme, List<HouseholdData> householdMembers) {
-        SchemeDTO schemeDTO = schemeMapper.toDTO(scheme, true);
+        var schemeDTO = schemeMapper.toDTO(scheme, true);
 
         if (isCriteriaMet(schemeDTO.getCriteria(), applicant.getEmploymentStatus())) {
-            return Optional.of(calculateEligibleBenefits(householdMembers, schemeDTO.getCriteria(), schemeDTO.getBenefits()));
+            var eligibleBenefits = calculateEligibleBenefits(householdMembers, schemeDTO.getCriteria(), schemeDTO.getBenefits());
+            return new SchemeDTO(
+                    scheme.getId(),
+                    scheme.getSchemeName(),
+                    scheme.getDescription(),
+                    scheme.getDisplayName(),
+                    scheme.getStartDate(),
+                    scheme.getEndDate(),
+                    null,
+                    eligibleBenefits);
         }
 
-        return Optional.empty();
+        return null;
     }
-
 
     private boolean isCriteriaMet(Map<String, String> criteria, EmploymentStatus applicantEmploymentStatus) {
         var employmentStatus = criteria.get(CRITERIA_EMPLOYMENT_STATUS);
@@ -102,6 +93,5 @@ public class SchemeService {
         int age = Period.between(member.getApplicant().getDateOfBirth(), LocalDate.now()).getYears();
         return age >= 6 && age <= 12;
     }
-
 
 }
