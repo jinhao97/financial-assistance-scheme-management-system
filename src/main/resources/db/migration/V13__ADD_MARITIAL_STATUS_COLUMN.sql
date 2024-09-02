@@ -1,0 +1,1 @@
+ALTER TABLE public.t_applicant ADD maritial_status VARCHAR(255);

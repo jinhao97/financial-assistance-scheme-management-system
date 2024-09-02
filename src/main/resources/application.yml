@@ -16,6 +16,14 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/assignmentdb
     username: postgres
+    password: admin
+
+  flyway:
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    default-schema: public
+    sql-migration-prefix: V
+    baseline-version: 1
 
 logging:
   level:
