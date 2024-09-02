@@ -15,6 +15,7 @@ import sg.gov.financial.assistance.scheme.assignment.dto.ApplicationDTO;
 import sg.gov.financial.assistance.scheme.assignment.dto.ApplicationRequestDTO;
 import sg.gov.financial.assistance.scheme.assignment.dto.ApplicationResponse;
 import sg.gov.financial.assistance.scheme.assignment.service.ApplicationService;
+import sg.gov.financial.assistance.scheme.assignment.service.FinancialSchemeFacade;
 
 import java.util.List;
 
@@ -23,10 +24,12 @@ import java.util.List;
 public class ApplicationController {
 
     private final ApplicationService applicationService;
+    private final FinancialSchemeFacade financialSchemeFacade;
 
     @Autowired
-    public ApplicationController(ApplicationService applicationService) {
+    public ApplicationController(ApplicationService applicationService, FinancialSchemeFacade financialSchemeFacade) {
         this.applicationService = applicationService;
+        this.financialSchemeFacade = financialSchemeFacade;
     }
 
     @Operation(summary = "Get all applications",
@@ -59,7 +62,7 @@ public class ApplicationController {
     })
     @PostMapping
     public ResponseEntity<ApplicationResponse<ApplicationDTO>> createApplication(@RequestBody ApplicationRequestDTO request) {
-        var result = applicationService.createApplication(request);
+        var result = financialSchemeFacade.createApplication(request);
         var response = new ApplicationResponse<>(Status.SUCCESS, result);
         return ResponseEntity.ok(response);
     }

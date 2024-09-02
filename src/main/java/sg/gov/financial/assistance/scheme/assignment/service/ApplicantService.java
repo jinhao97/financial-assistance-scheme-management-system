@@ -8,6 +8,7 @@ import sg.gov.financial.assistance.scheme.assignment.dto.ApplicantDTO;
 import sg.gov.financial.assistance.scheme.assignment.entity.ApplicantEntity;
 import sg.gov.financial.assistance.scheme.assignment.entity.HouseholdData;
 import sg.gov.financial.assistance.scheme.assignment.exception.ApplicationException;
+import sg.gov.financial.assistance.scheme.assignment.mapper.ApplicantMapper;
 import sg.gov.financial.assistance.scheme.assignment.repository.ApplicantRepository;
 
 import java.util.List;
@@ -18,16 +19,18 @@ import java.util.stream.Collectors;
 public class ApplicantService {
 
     private final ApplicantRepository applicantRepository;
+    private final ApplicantMapper applicantMapper;
 
     @Autowired
-    public ApplicantService(ApplicantRepository applicantRepository) {
+    public ApplicantService(ApplicantRepository applicantRepository, ApplicantMapper applicantMapper) {
         this.applicantRepository = applicantRepository;
+        this.applicantMapper = applicantMapper;
     }
 
     public List<ApplicantDTO> getAllHouseholdWithMembers() {
         var applicants = applicantRepository.findAllHouseholdsWithMembers();
         return applicants.stream()
-                .map(this::convertToApplicantDTO)
+                .map(applicantMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
@@ -43,81 +46,29 @@ public class ApplicantService {
 
     @Transactional
     public ApplicantDTO createNewApplicant(ApplicantDTO applicantDTO) {
-        // Create the head of household entity
-        ApplicantEntity newApplicant = new ApplicantEntity(
-                applicantDTO.getName(),
-                applicantDTO.getRelationship(),
-                applicantDTO.getSex(),
-                applicantDTO.getDateOfBirth(),
-                applicantDTO.getUin(),
-                applicantDTO.getEmploymentStatus(),
-                applicantDTO.getMaritialStatus()
-        );
+
+        checkIfApplicantExists(applicantDTO.getUin());
+
+        ApplicantEntity newApplicant = applicantMapper.toEntity(applicantDTO);
 
         if (applicantDTO.getHouseholdMembers() != null) {
             List<ApplicantEntity> householdMembers = applicantDTO.getHouseholdMembers().stream()
-                    .map(dto -> new ApplicantEntity(
-                            dto.getName(),
-                            dto.getRelationship(),
-                            dto.getSex(),
-                            dto.getDateOfBirth(),
-                            dto.getUin(),
-                            dto.getEmploymentStatus(),
-                            dto.getMaritialStatus()
-                    ))
+                    .map(applicantMapper::toEntity)
                     .collect(Collectors.toList());
 
             householdMembers.forEach(member -> member.setHousehold(newApplicant));
-
             newApplicant.setHouseholdMembers(householdMembers);
         }
 
-        // Save the head of household, which will also save household members due to CascadeType.ALL
         ApplicantEntity newApplicantEntity = applicantRepository.save(newApplicant);
 
-        return convertToApplicantDTO(newApplicantEntity);
+        return applicantMapper.toDTO(newApplicantEntity);
     }
 
-
-    public ApplicantDTO convertToApplicantDTO(ApplicantEntity applicantEntity) {
-        if (applicantEntity == null) return null;
-
-        List<ApplicantDTO> householdMembers = applicantEntity.getHouseholdMembers() != null
-                ? applicantEntity.getHouseholdMembers().stream().map(applicant -> new ApplicantDTO(
-                applicant.getId(),
-                applicant.getName(),
-                applicant.getSex(),
-                applicant.getDateOfBirth(),
-                applicant.getUin(),
-                applicant.getEmploymentStatus(),
-                applicant.getMaritialStatus(),
-                applicant.getRelationship()
-        )).collect(Collectors.toList())
-                : null;
-
-        if (householdMembers != null) {
-            return new ApplicantDTO(
-                    applicantEntity.getId(),
-                    applicantEntity.getName(),
-                    applicantEntity.getSex(),
-                    applicantEntity.getDateOfBirth(),
-                    applicantEntity.getUin(),
-                    applicantEntity.getEmploymentStatus(),
-                    applicantEntity.getRelationship(),
-                    applicantEntity.getMaritialStatus(),
-                    householdMembers
-            );
+    private void checkIfApplicantExists(String uin) {
+        var existingApplicant = Optional.ofNullable(applicantRepository.findApplicantEntityByUin(uin));
+        if (existingApplicant.isPresent()) {
+            throw new ApplicationException(HttpStatus.BAD_REQUEST, String.format("Applicant %s already exists", uin));
         }
-
-        return new ApplicantDTO(
-                applicantEntity.getId(),
-                applicantEntity.getName(),
-                applicantEntity.getSex(),
-                applicantEntity.getDateOfBirth(),
-                applicantEntity.getUin(),
-                applicantEntity.getEmploymentStatus(),
-                applicantEntity.getMaritialStatus(),
-                applicantEntity.getRelationship()
-        );
     }
 }
