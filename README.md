@@ -73,7 +73,7 @@ Open a web browser and go to http://localhost:8080/swagger-ui/index.html.
 5. Make a POST request to /api/v1/auth/login with the default admin user to get a valid JWT token
 
 ```bash
-  curl -X POST http://localhost:8080/api/v1/auth/login -H "Content-Type: application/json" -d "{\"email\":\"admin@gmail.com\", \"password\":\"admin\"}"
+  curl -X POST http://localhost:8080/api/v1/auth/login -H "Content-Type: application/json" -d "{\"uin\":\"S1234567D\", \"password\":\"admin\"}"
 ```
 
 6. Add the JWT token in the authentication window that appears when the Authorize button is clicked.
