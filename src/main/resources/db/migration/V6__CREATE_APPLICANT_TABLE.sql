@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS public.t_applicant
     date_of_birth       DATE,
     uin                 VARCHAR(255),
     employment_status   VARCHAR(255),
+    maritial_status     VARCHAR(255),
     relationship        VARCHAR(255),
     household_id        BIGINT,
     is_deleted          BOOLEAN NOT NULL,
