@@ -6,46 +6,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RegisterRequestDTO {
 
-    private String firstname;
-
-    private String lastname;
-
-    private String email;
+    private String uin;
 
     private String password;
 
     public RegisterRequestDTO() {
     }
 
-    public RegisterRequestDTO(String firstname, String lastname, String email, String password) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.email = email;
+    public RegisterRequestDTO(String uin, String password) {
+        this.uin = uin;
         this.password = password;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getPassword() {
@@ -54,5 +24,13 @@ public class RegisterRequestDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getUin() {
+        return uin;
+    }
+
+    public void setUin(String uin) {
+        this.uin = uin;
     }
 }
