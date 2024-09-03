@@ -8,9 +8,9 @@ import sg.gov.financial.assistance.scheme.assignment.entity.AdministratorEntity;
 
 import java.util.Optional;
 
-public class ApplicationAuditAware implements AuditorAware<Integer> {
+public class ApplicationAuditAware implements AuditorAware<String> {
     @Override
-    public Optional<Integer> getCurrentAuditor() {
+    public Optional<String> getCurrentAuditor() {
         Authentication authentication =
                 SecurityContextHolder
                         .getContext()
@@ -23,6 +23,6 @@ public class ApplicationAuditAware implements AuditorAware<Integer> {
         }
 
         AdministratorEntity userPrincipal = (AdministratorEntity) authentication.getPrincipal();
-        return Optional.ofNullable(userPrincipal.getId().intValue());
+        return Optional.ofNullable(userPrincipal.getUsername());
     }
 }
