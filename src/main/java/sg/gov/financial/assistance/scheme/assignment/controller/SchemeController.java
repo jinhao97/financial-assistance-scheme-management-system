@@ -57,7 +57,7 @@ public class SchemeController {
                     content = @Content(schema = @Schema(implementation = ApplicationResponse.class))),
     })
     @GetMapping("/eligible")
-    public ResponseEntity<ApplicationResponse<EligibleSchemeDTO>> getEligibleSchemes(@RequestParam("applicant") String uin) {
+    public ResponseEntity<ApplicationResponse<EligibleSchemeDTO>> getEligibleSchemes(@RequestParam("applicant") @Schema(description = "Applicant UIN") String uin) {
         var result = financialSchemeFacade.showApplicantEligibleSchemes(uin);
         var response = new ApplicationResponse<>(Status.SUCCESS, result);
         return ResponseEntity.ok(response);
