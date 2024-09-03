@@ -1,1 +1,0 @@
-ALTER TABLE public.t_applications ADD benefit_details JSONB;

@@ -1,23 +1,23 @@
 package sg.gov.financial.assistance.scheme.assignment.dto;
 
 public class LoginDTO {
-    private String email;
+    private String uin;
     private String password;
 
     public LoginDTO() {
     }
 
-    public LoginDTO(String email, String password) {
-        this.email = email;
+    public LoginDTO(String uin, String password) {
+        this.uin = uin;
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUin() {
+        return uin;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUin(String uin) {
+        this.uin = uin;
     }
 
     public String getPassword() {

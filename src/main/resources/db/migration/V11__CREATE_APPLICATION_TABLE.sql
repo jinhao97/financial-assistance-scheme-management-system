@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS public.t_applications
     CONSTRAINT applicant_fk REFERENCES public.t_applicant (id) ON DELETE CASCADE,
     scheme_id           bigint NOT NULL
     CONSTRAINT application_scheme_fk REFERENCES public.t_schemes (id) ON DELETE CASCADE,
+    benefit_details JSONB,
     status   VARCHAR(255),
     submission_date_time TIMESTAMP,
     is_deleted         boolean      NOT NULL,

@@ -23,11 +23,11 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ApplicationResponse<AuthenticationResponseDTO>> register(
+    public ResponseEntity<ApplicationResponse<String>> register(
             @RequestBody RegisterRequestDTO request
     ) {
         var result = authenticationService.register(request);
-        var response = new ApplicationResponse<>(Status.SUCCESS, result);
+        var response = new ApplicationResponse<>(Status.SUCCESS, result != null ? "User has been successfully created" : "Error creating user");
         return ResponseEntity.ok(response);
     }
 
